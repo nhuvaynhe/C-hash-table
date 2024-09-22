@@ -4,7 +4,11 @@
 #define HT_PRIME_1      163
 #define HT_PRIME_2      111
 
+#if (DEBUG)
+#define HT_INITIAL_BASE_SIZE 20
+#else
 #define HT_INITIAL_BASE_SIZE 50
+#endif
 
 typedef struct hash_item {
     char *key;

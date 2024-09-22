@@ -44,7 +44,7 @@ static int ht_get_hash(const char *s, const int buckets, const int attempt)
     return (hash_a + (attempt * (hash_b + 1))) % buckets;
 }
 
-static hash_table *ht_new_sized(const int base_size)
+static hash_table *ht_new_size(const int base_size)
 {
     hash_table* ht = malloc(sizeof(hash_table));
     if (!ht) {
@@ -65,7 +65,7 @@ static void ht_resize(hash_table *ht, const int base_size)
         return;
     }
 
-    hash_table *new_ht = ht_new_sized(base_size);
+    hash_table *new_ht = ht_new_size(base_size);
     for (int i = 0; i < ht->size; i++) {
         hash_item *item = ht->items[i];
         if (item != NULL && item != &HT_DELETED_ITEM) {
@@ -104,7 +104,7 @@ static void ht_resize_down(hash_table *ht)
 /****************************** PUBLIC FUNC ******************************/
 hash_table *ht_new()
 {
-    return ht_new_sized(HT_INITIAL_BASE_SIZE);
+    return ht_new_size(HT_INITIAL_BASE_SIZE);
 }
 
 
@@ -123,6 +123,11 @@ void ht_del_hash_table(hash_table* ht)
 /**************************** HASH TABLE API ****************************/
 void ht_insert(hash_table *ht, const char *key, const char *value)
 {
+    const int load = ht->count * 100 / ht->size;
+    if (load > 70) { 
+        ht_resize_up(ht);
+    }
+
     hash_item *item = ht_new_item(key, value);
     int index = ht_get_hash(key, ht->size, 0);
     hash_item *cur_item = ht->items[index];
@@ -146,11 +151,6 @@ void ht_insert(hash_table *ht, const char *key, const char *value)
     }
     ht->items[index] = item;
     ht->count++;
-
-    int load = ht->count * 100 / ht->size;
-    if (load > 0.7) { 
-        ht_resize_up(ht);
-    }
 }
 
 char* ht_search(hash_table *ht, const char *key)
@@ -175,6 +175,11 @@ char* ht_search(hash_table *ht, const char *key)
 
 void ht_delete(hash_table *ht, const char *key)
 {
+    const int load = ht->count * 100 / ht->size;
+    if (load < 10) { 
+        ht_resize_down(ht);
+    }
+
     int index = ht_get_hash(key, ht->size, 0);
     hash_item *item = ht->items[index];
     int i = 1;
@@ -191,11 +196,6 @@ void ht_delete(hash_table *ht, const char *key)
         i++;
     }
     ht->count--;
-
-    int load = ht->count * 100 / ht->size;
-    if (load < 0.1) { 
-        ht_resize_down(ht);
-    }
 }
 
 
