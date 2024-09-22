@@ -4,6 +4,8 @@
 #define HT_PRIME_1      163
 #define HT_PRIME_2      111
 
+#define HT_INITIAL_BASE_SIZE 50
+
 typedef struct hash_item {
     char *key;
     char *value;
@@ -12,6 +14,7 @@ typedef struct hash_item {
 typedef struct hash_table {
     int size;
     int count;
+    int base_size;
     hash_item** items;
 } hash_table;
 
@@ -20,6 +23,8 @@ static int hashing_func(const char *s, const int num, const int buckets);
 static hash_item* ht_new_item(const char* k, const char *v);
 static void ht_del_item(hash_item *i); 
 static int ht_get_hash(const char *s, const int buckets, const int attempt);
+static hash_table *ht_new_sized(const int base_size);
+static void ht_resize(hash_table *ht, const int base_size);
 /************* END OF PRIVATE SECTION ************/
 
 /********************* PUBLIC ********************/
