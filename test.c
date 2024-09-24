@@ -12,27 +12,23 @@ TEST(test_prime) {
 }
 
 TEST(test_create_ht) {
-    ASSERT(my_ht->base_size == 7);
+    ASSERT(my_ht->base_size == 30);
     ASSERT(my_ht->count == 0);
-    ASSERT(my_ht->size == next_prime(my_ht->base_size));
+    ASSERT(my_ht->size == 31);
 }
 
 TEST(test_insert_ht) {
-
     ASSERT(strcmp(ht_search(my_ht, "ngocdai"), "16062002") == 0);
     ASSERT(strcmp(ht_search(my_ht, "yenlinh"), "06032002") == 0);
-    ASSERT(strcmp(ht_search(my_ht, "date"), "26102019") == 0);
+    ASSERT(strcmp(ht_search(my_ht, "date"), "hello") == 0);
     ASSERT(strcmp(ht_search(my_ht, "today"), "22092024") == 0);
-    ASSERT(strcmp(ht_search(my_ht, "years"), "5years") == 0);
 
     ASSERT(ht_search(my_ht, "year") == NULL);
-    ASSERT(my_ht->count == 5);
 }
 
 TEST(test_resize_up_ht) {
-    ASSERT(my_ht->count == 6);
-    ASSERT(my_ht->base_size == 40);
-    printf("%d-%d", my_ht->count, my_ht->base_size);
+    ASSERT(my_ht->count == 15);
+    ASSERT(my_ht->base_size == 60);
 }
 
 int main() {
@@ -40,31 +36,33 @@ int main() {
 
     RUN_TEST(test_prime);
     RUN_TEST(test_create_ht);
-    
+
+    /* 1 to 5 */
     ht_insert(my_ht, "ngocdai", "16062002");
     ht_insert(my_ht, "yenlinh", "06032002");
-    ht_insert(my_ht, "date", "26102019");
+    ht_insert(my_ht, "date", "hello");
     ht_insert(my_ht, "today", "22092024");
-    ht_insert(my_ht, "years", "5years");
-    RUN_TEST(test_insert_ht);
-
     ht_insert(my_ht, "alice", "01011990");
-    ht_insert(my_ht, "bob", "25051995");
-    ht_insert(my_ht, "carol", "12121985");
-    ht_insert(my_ht, "dave", "03082000");
-    ht_insert(my_ht, "eve", "14022001");
-    ht_insert(my_ht, "frank", "05061998");
-    ht_insert(my_ht, "grace", "08082003");
-    ht_insert(my_ht, "hank", "22042004");
-    ht_insert(my_ht, "iris", "17071997");
-    ht_insert(my_ht, "jack", "30092000");
-    ht_insert(my_ht, "kate", "15032002");
-    ht_insert(my_ht, "leo", "11011989");
-    ht_insert(my_ht, "mona", "22052001");
-    ht_insert(my_ht, "nate", "04082005");
-    ht_insert(my_ht, "olivia", "19062003");
+    ASSERT(my_ht->count == 5);
+    RUN_TEST(test_insert_ht);
+    
+    /* 6 to 10 */
+    ht_insert(my_ht, "test1", "25051995");
+    ht_insert(my_ht, "test2", "03082000");
+    ht_insert(my_ht, "test3", "14022001");
+    ht_insert(my_ht, "test4", "05061998");
+    ht_insert(my_ht, "test5", "08082003");
+
+    /* 11 to 15 */
+    ht_insert(my_ht, "test6", "22042004");
+    ht_insert(my_ht, "test7", "17071997");
+    ht_insert(my_ht, "test8", "30092000");
+    ht_insert(my_ht, "test9", "15032002");
+    ht_insert(my_ht, "test10", "11011989");
+
 
     RUN_TEST(test_resize_up_ht);
+    RUN_TEST(test_insert_ht);
 
     return failed;
 }
