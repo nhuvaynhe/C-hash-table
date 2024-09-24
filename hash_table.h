@@ -5,9 +5,13 @@
 #define HT_PRIME_2      111
 
 #if (DEBUG)
-#define HT_INITIAL_BASE_SIZE 20
+#define HT_INITIAL_BASE_SIZE 30
+#define LOAD_PERCENT_UP      40
+#define LOAD_PERCENT_DOWN    20
 #else
 #define HT_INITIAL_BASE_SIZE 50
+#define LOAD_PERCENT_UP      70
+#define LOAD_PERCENT_DOWN    10
 #endif
 
 typedef struct hash_item {
