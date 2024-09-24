@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdio.h>
 
 #include "hash_table.h"
 #include "prime.h"
@@ -124,7 +125,7 @@ void ht_del_hash_table(hash_table* ht)
 void ht_insert(hash_table *ht, const char *key, const char *value)
 {
     const int load = ht->count * 100 / ht->size;
-    if (load > 70) { 
+    if (load > LOAD_PERCENT_UP) { 
         ht_resize_up(ht);
     }
 
@@ -136,19 +137,17 @@ void ht_insert(hash_table *ht, const char *key, const char *value)
     // if key exists, overwrite the previous item.
     while (cur_item != NULL) {
         if (cur_item != &HT_DELETED_ITEM) {
-            if (strcmp(item->key, key) == 0) {
+            if (strcmp(cur_item->key, key) == 0) {
                 ht_del_item(cur_item);
                 ht->items[index] = item;
                 return;
             }
         }
-    }
-
-    while (cur_item != NULL && cur_item != &HT_DELETED_ITEM) {
         index = ht_get_hash(key, ht->size, i);
         cur_item = ht->items[index];
         i++;
     }
+
     ht->items[index] = item;
     ht->count++;
 }
@@ -176,7 +175,7 @@ char* ht_search(hash_table *ht, const char *key)
 void ht_delete(hash_table *ht, const char *key)
 {
     const int load = ht->count * 100 / ht->size;
-    if (load < 10) { 
+    if (load < LOAD_PERCENT_DOWN) { 
         ht_resize_down(ht);
     }
 
